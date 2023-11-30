@@ -131,10 +131,35 @@ const deleteSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
 });
+const updateOrderInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = Number(req.params.userId);
+        const body = req.body;
+        const result = yield user_service_1.UserService.updateOrderInUserFromDB(userId, body);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        res.status(200).json({
+            success: true,
+            message: 'Order created successfully!',
+            data: null,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(404).json({
+            success: false,
+            message: 'User not found',
+            error: {
+                code: 404,
+                description: 'User not found',
+            },
+        });
+    }
+});
 exports.userController = {
     createUser,
     getUser,
     getSingleUser,
     updateSingleUser,
     deleteSingleUser,
+    updateOrderInUser,
 };

@@ -47,10 +47,20 @@ const deleteSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, fun
         throw Error('User do not  exists');
     }
 });
+const updateOrderInUserFromDB = (userId, body) => __awaiter(void 0, void 0, void 0, function* () {
+    if (yield user_models_1.ModelUser.isUserExist(userId)) {
+        const result = yield user_models_1.ModelUser.updateOne({ userId: userId }, { $push: { orders: { $each: [body] } } });
+        return result;
+    }
+    else {
+        throw Error('User do not  exists');
+    }
+});
 exports.UserService = {
     createUserDB,
     getUsersFromDB,
     getSingleUserFromDB,
     updateSingleUserFromDB,
     deleteSingleUserFromDB,
+    updateOrderInUserFromDB,
 };
