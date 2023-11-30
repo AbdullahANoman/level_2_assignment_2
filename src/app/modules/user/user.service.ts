@@ -24,8 +24,10 @@ const getSingleUserFromDB = async (userId: number) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const updateSingleUserFromDB = async (userId: number, body: any) => {
   if (await ModelUser.isUserExist(userId)) {
-    const result = await ModelUser.updateOne({ userId }, body);
-    return result;
+    if (await ModelUser.updateOne({ userId }, body)) {
+      delete body.password;
+      return body;
+    }
   } else {
     throw Error('User do not  exists');
   }
@@ -60,6 +62,39 @@ const getTheOrdersFromDB = async (userId: number) => {
     throw Error('User do not  exists');
   }
 };
+
+const getTotalPriceForSingleUserInB = async (userId: number) => {
+  if (await ModelUser.isUserExist(userId)) {
+    const result = await ModelUser.aggregate([
+      {
+        $match: { userId },
+      },
+      {
+        $project: {
+          orders: 1,
+          orderTotalPrice: {
+            $sum: {
+              $map: {
+                input: '$orders',
+                as: 'order',
+                in: { $multiply: ['$$order.price', '$$order.quantity'] },
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalPrice: { $sum: '$orderTotalPrice' },
+        },
+      },
+    ]);
+    return result;
+  } else {
+    throw Error('User do not  exists');
+  }
+};
 export const UserService = {
   createUserDB,
   getUsersFromDB,
@@ -68,4 +103,5 @@ export const UserService = {
   deleteSingleUserFromDB,
   updateOrderInUserFromDB,
   getTheOrdersFromDB,
+  getTotalPriceForSingleUserInB,
 };

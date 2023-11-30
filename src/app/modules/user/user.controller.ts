@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import UserValidationZod from './user.validation';
@@ -15,19 +14,18 @@ const createUser = async (req: Request, res: Response) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: error.message,
       error: {
         code: 404,
-        description: 'User not found',
+        description: error || 'User not found',
       },
     });
   }
 };
 
-const getUser = async (req: Request, res: Response) => {
+const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserService.getUsersFromDB();
     res.status(200).json({
@@ -35,15 +33,13 @@ const getUser = async (req: Request, res: Response) => {
       message: 'Users fetched successfully!',
       data: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: 'Users not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: 'Users not found',
       },
     });
   }
@@ -53,14 +49,12 @@ const getSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
     const result = await UserService.getSingleUserFromDB(userId);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
       data: result,
     });
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
       message: 'User not found',
@@ -75,19 +69,17 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
-    const body = req.body;
+    let body = req.body;
     const result = await UserService.updateSingleUserFromDB(userId, body);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res.status(200).json({
       success: true,
       message: 'User updated successfully!',
       data: result,
     });
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: 'User not Exists',
       error: {
         code: 404,
         description: 'User not found',
@@ -166,12 +158,36 @@ const getOrdersInSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const getTotalPriceForSingleUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserService.getTotalPriceForSingleUserInB(userId);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found',
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
-  getUser,
+  getAllUsers,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
   updateOrderInUser,
   getOrdersInSingleUser,
+  getTotalPriceForSingleUser,
 };

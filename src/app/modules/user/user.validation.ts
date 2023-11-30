@@ -1,26 +1,26 @@
 const { z } = require('zod');
 
 const FullNameValidationZod = z.object({
-  firstName: z.string().nonempty('firstName is required'),
-  lastName: z.string().nonempty('lastName is required'),
+  firstName: z.string(),
+  lastName: z.string(),
 });
 
 const AddressValidationZod = z.object({
-  street: z.string().nonempty('street is required'),
-  city: z.string().nonempty('city is required'),
-  country: z.string().nonempty('country is required'),
+  street: z.string(),
+  city: z.string(),
+  country: z.string(),
 });
 
 const OrdersValidationZod = z.object({
-  productName: z.string().nonempty('productName is required'),
+  productName: z.string(),
   price: z.number().min(0, { message: 'price must be a positive number' }),
   quantity: z.number().min(1, { message: 'quantity must be at least 1' }),
 });
 
 const UserValidationZod = z.object({
   userId: z.number(),
-  username: z.string().nonempty('username is required'),
-  password: z.string().nonempty('password is required'),
+  username: z.string(),
+  password: z.string(),
   fullName: FullNameValidationZod,
   age: z.number().min(0, { message: 'age must be a positive number' }),
   email: z.string().email('Invalid email').nonempty('email is required'),
