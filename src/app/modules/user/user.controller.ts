@@ -91,7 +91,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
 const deleteSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
-    const result = await UserService.deleteSingleUserFromDB(userId);
+    await UserService.deleteSingleUserFromDB(userId);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res.status(200).json({
       success: true,
@@ -99,10 +99,9 @@ const deleteSingleUser = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: 'User do not exist',
       error: {
         code: 404,
         description: 'User not found',
@@ -115,21 +114,19 @@ const updateOrderInUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
     const body = req.body;
-    const result = await UserService.updateOrderInUserFromDB(userId, body);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await UserService.updateOrderInUserFromDB(userId, body);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
       data: null,
     });
   } catch (error: any) {
-    console.log(error);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: 'User do  not exist',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
