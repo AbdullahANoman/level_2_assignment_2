@@ -14,7 +14,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.all('*', (req: Request, res: Response) => {
-  console.log(req);
   res.status(400).json({
     success: false,
     message: 'Route not found 🚀',
