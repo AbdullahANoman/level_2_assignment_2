@@ -71,11 +71,6 @@ userSchema.post('findOne', function (doc, next) {
   next();
 });
 
-// updateOne
-userSchema.pre('updateOne', function () {
-  console.log(this);
-});
-
 userSchema.static('isUserExist', async function isUserExist(id: number) {
   const existingUser = await ModelUser.findOne({ userId: id });
   return existingUser;

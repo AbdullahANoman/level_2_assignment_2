@@ -43,7 +43,7 @@ const getUser = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: error.message || 'User not found',
+        description: 'User not found',
       },
     });
   }
@@ -66,7 +66,7 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: error.message || 'User not found',
+        description: 'User not found',
       },
     });
   }
@@ -74,14 +74,14 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
+    const userId = Number(req.params.userId);
     const body = req.body;
-    await UserService.updateSingleUserFromDB(userId, body);
+    const result = await UserService.updateSingleUserFromDB(userId, body);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res.status(200).json({
       success: true,
       message: 'User updated successfully!',
-      data: body,
+      data: result,
     });
   } catch (error: any) {
     console.log(error);
@@ -90,7 +90,30 @@ const updateSingleUser = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: error.message || 'User not found',
+        description: 'User not found',
+      },
+    });
+  }
+};
+
+const deleteSingleUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserService.deleteSingleUserFromDB(userId);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found',
       },
     });
   }
@@ -101,4 +124,5 @@ export const userController = {
   getUser,
   getSingleUser,
   updateSingleUser,
+  deleteSingleUser,
 };

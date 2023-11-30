@@ -22,14 +22,27 @@ const getSingleUserFromDB = async (userId: number) => {
   }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateSingleUserFromDB = async (userId: string, body: any) => {
-  const numberUserId = Number(userId);
-  const result = await ModelUser.updateOne({ userId: numberUserId }, body);
-  return result;
+const updateSingleUserFromDB = async (userId: number, body: any) => {
+  if (await ModelUser.isUserExist(userId)) {
+    const result = await ModelUser.updateOne({ userId }, body);
+    return result;
+  } else {
+    throw Error('User do not  exists');
+  }
+};
+
+const deleteSingleUserFromDB = async (userId: number) => {
+  if (await ModelUser.isUserExist(userId)) {
+    const result = await ModelUser.deleteOne({ userId });
+    return result;
+  } else {
+    throw Error('User do not  exists');
+  }
 };
 export const UserService = {
   createUserDB,
   getUsersFromDB,
   getSingleUserFromDB,
   updateSingleUserFromDB,
+  deleteSingleUserFromDB,
 };
