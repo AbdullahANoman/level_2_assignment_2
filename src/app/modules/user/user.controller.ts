@@ -143,6 +143,29 @@ const updateOrderInUser = async (req: Request, res: Response) => {
   }
 };
 
+const getOrdersInSingleUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserService.getTheOrdersFromDB(userId);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found',
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getUser,
@@ -150,4 +173,5 @@ export const userController = {
   updateSingleUser,
   deleteSingleUser,
   updateOrderInUser,
+  getOrdersInSingleUser,
 };

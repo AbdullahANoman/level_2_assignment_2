@@ -51,6 +51,15 @@ const updateOrderInUserFromDB = async (userId: number, body: any) => {
     throw Error('User do not  exists');
   }
 };
+
+const getTheOrdersFromDB = async (userId: number) => {
+  if (await ModelUser.isUserExist(userId)) {
+    const result = await ModelUser.find({ userId }, { orders: 1 });
+    return result;
+  } else {
+    throw Error('User do not  exists');
+  }
+};
 export const UserService = {
   createUserDB,
   getUsersFromDB,
@@ -58,4 +67,5 @@ export const UserService = {
   updateSingleUserFromDB,
   deleteSingleUserFromDB,
   updateOrderInUserFromDB,
+  getTheOrdersFromDB,
 };

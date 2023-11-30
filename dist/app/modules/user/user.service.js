@@ -56,6 +56,15 @@ const updateOrderInUserFromDB = (userId, body) => __awaiter(void 0, void 0, void
         throw Error('User do not  exists');
     }
 });
+const getTheOrdersFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (yield user_models_1.ModelUser.isUserExist(userId)) {
+        const result = yield user_models_1.ModelUser.find({ userId }, { orders: 1 });
+        return result;
+    }
+    else {
+        throw Error('User do not  exists');
+    }
+});
 exports.UserService = {
     createUserDB,
     getUsersFromDB,
@@ -63,4 +72,5 @@ exports.UserService = {
     updateSingleUserFromDB,
     deleteSingleUserFromDB,
     updateOrderInUserFromDB,
+    getTheOrdersFromDB,
 };
